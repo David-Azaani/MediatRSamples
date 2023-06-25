@@ -1,32 +1,42 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Server.Models;
 using System.Diagnostics;
+using MediatR;
+using Server.Commands;
 
 namespace Server.Controllers
 {
-    public class HomeController : Controller
+    [ApiController]
+    [Route("[controller]")]
+    public class HomeController : ControllerBase
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IMediator _mediator;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger,IMediator mediator)
         {
             _logger = logger;
+            _mediator = mediator;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public IActionResult Get()
         {
-            return View();
+            string message = "Hello World !";
+
+            return Ok(message);
         }
 
-        public IActionResult Privacy()
+        [HttpGet(template:"test1")]
+        public IActionResult Test1()
         {
-            return View();
+            var command1 = new DoSomething1Command(){SomeProperty = "Command 1"};
+            _mediator.Send(command1);
+
+            return Ok(value:"Ok");
+
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+      
     }
 }
