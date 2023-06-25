@@ -42,6 +42,24 @@ namespace Server.Controllers
 
             return Ok(value: res);
 
+        } 
+        [HttpGet(template: "test3")]
+        public async Task<IActionResult> Test3()
+        {
+            var command3 = new DoSomething3Command() { SomeProperty = "Command 3" };
+            var res = await _mediator.Send(command3);
+
+            if (res.IsSuccess)
+            {
+                return Ok(value: res);
+            }
+            else
+            {
+                return BadRequest(error: res);
+            }
+
+            
+
         }
 
 
