@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentResults;
+using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using Server.Commands;
 
@@ -28,7 +29,7 @@ namespace Server.Controllers
         [HttpGet(template: "test1")]
         public IActionResult Test1()
         {
-            var command1 = new DoSomething1Command() { SomeProperty = "Command 1" };
+            var command1 = new DoSomething1Command { SomeProperty = "Command 1" };
             _mediator.Send(command1);
 
             return Ok(value: "Ok");
@@ -37,7 +38,7 @@ namespace Server.Controllers
         [HttpGet(template: "test2")]
         public async Task<IActionResult> Test2()
         {
-            var command2 = new DoSomething2Command() { SomeProperty = "Command 2" };
+            var command2 = new DoSomething2Command { SomeProperty = "Command 2" };
             var res = await _mediator.Send<string>(command2);
 
             return Ok(value: res);
@@ -46,7 +47,7 @@ namespace Server.Controllers
         [HttpGet(template: "test3")]
         public async Task<IActionResult> Test3()
         {
-            var command3 = new DoSomething3Command() { SomeProperty = "Command 3" };
+            var command3 = new DoSomething3Command { SomeProperty = "Command 3" };
             var res = await _mediator.Send(command3);
 
             if (res.IsSuccess)
@@ -56,6 +57,25 @@ namespace Server.Controllers
             else
             {
                 return BadRequest(error: res);
+            }
+
+            
+
+        }
+        [HttpGet(template: "test4")]
+        public async Task<IActionResult> Test4()
+        {
+            var command4 = new DoSomething4Command { SomeProperty = "Command 4" };
+           Result<string> res = await _mediator.Send(command4);
+
+            if (res.IsSuccess)
+            {
+                return Ok(value: res);
+            }
+            else
+            {
+                // if we use generic result we have to use .ToResult() in BadRequest.otherwise we have got Exception!
+                return BadRequest(error: res.ToResult());
             }
 
             
