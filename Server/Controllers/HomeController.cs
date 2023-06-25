@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Server.Models;
-using System.Diagnostics;
 using MediatR;
 using Server.Commands;
 

@@ -11,10 +11,14 @@ namespace Server.CommandHandlers
         }
         public async Task<string> Handle(DoSomething2Command request, CancellationToken cancellationToken)
         {
-            string message = request.SomeProperty.ToUpper();
+            string result = string.Empty;
+            await Task.Run(() =>
+            {
+                 result = request.SomeProperty.ToUpper();
 
-            Console.WriteLine(message);
-            return message;
+                Console.WriteLine(result);
+            });
+            return result;
         }
     }
 }
