@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using Server.Commands;
+using Server.Notifications;
 
 namespace Server.Controllers
 {
@@ -43,7 +44,7 @@ namespace Server.Controllers
 
             return Ok(value: res);
 
-        } 
+        }
         [HttpGet(template: "test3")]
         public async Task<IActionResult> Test3()
         {
@@ -59,14 +60,14 @@ namespace Server.Controllers
                 return BadRequest(error: res);
             }
 
-            
+
 
         }
         [HttpGet(template: "test4")]
         public async Task<IActionResult> Test4()
         {
             var command4 = new DoSomething4Command { SomeProperty = "Command 4" };
-           Result<string> res = await _mediator.Send(command4);
+            Result<string> res = await _mediator.Send(command4);
 
             if (res.IsSuccess)
             {
@@ -78,7 +79,33 @@ namespace Server.Controllers
                 return BadRequest(error: res.ToResult());
             }
 
+
+
+        }
+        [HttpGet(template: "test5")]
+        public async Task<IActionResult> Test5()
+        {
             
+            try
+            {
+                var notification = new DoSomethingNotification { SomeProperty = "Notification" };
+
+
+
+                //await _mediator.Publish<DoSomethingNotification>(notification);
+                await _mediator.Publish(notification);
+
+                return Ok(value: "Done!");
+
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(error: e.Message);
+            }
+
+            
+
 
         }
 
