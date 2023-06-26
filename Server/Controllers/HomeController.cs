@@ -2,21 +2,22 @@
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using Server.Commands;
+using Server.Infrastructure;
 using Server.Notifications;
 
 namespace Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class HomeController : ControllerBase
+    public class HomeController : Controller1Base
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly IMediator _mediator;
+        // private readonly ILogger<HomeController> _logger;
+        //  private readonly IMediator _mediator;
 
-        public HomeController(ILogger<HomeController> logger, IMediator mediator)
+        public HomeController(ILogger<HomeController> logger, IMediator mediator) : base(mediator, logger)
         {
-            _logger = logger;
-            _mediator = mediator;
+            //_logger = logger;
+            // _mediator = mediator;
         }
 
         [HttpGet]
@@ -32,6 +33,7 @@ namespace Server.Controllers
         {
             var command1 = new DoSomething1Command { SomeProperty = "Command 1" };
             _mediator.Send(command1);
+            //_logger.LogInformation("");
 
             return Ok(value: "Ok");
 
@@ -85,7 +87,7 @@ namespace Server.Controllers
         [HttpGet(template: "test5")]
         public async Task<IActionResult> Test5()
         {
-            
+
             try
             {
                 var notification = new DoSomethingNotification { SomeProperty = "Notification" };
@@ -104,7 +106,7 @@ namespace Server.Controllers
                 return BadRequest(error: e.Message);
             }
 
-            
+
 
 
         }
